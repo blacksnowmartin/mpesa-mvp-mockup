@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-PESA Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light grey background */
+        }
+        .mpesa-green {
+            background-color: #4CAF50; /* M-PESA Green */
+        }
+        .mpesa-green-text {
+            color: #4CAF50;
+        }
+        .btn-mpesa {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .btn-mpesa:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        .input-field {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        /* Page transition styles */
+        .page {
+            display: none; /* Hidden by default */
+        }
+        .page.active {
+            display: block; /* Shown when active */
+        }
+        /* Custom message box */
+        #messageBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, bottom 0.5s ease-in-out;
+            text-align: center;
+        }
+        #messageBox.show {
+            opacity: 1;
+            bottom: 40px;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold mpesa-green-text">M-PESA</h1>
+            <p class="text-gray-600">Your Mobile Money Service</p>
+        </header>
+
+        <main id="appContainer">
+            <div id="homePage" class="page active">
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="showPage('sendMoneyPage')" class="col-span-2 sm:col-span-1 btn-mpesa p-6 text-lg flex flex-col items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-send-fill mb-2" viewBox="0 0 16 16">
+                          <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                        </svg>
+                        Send Money
+                    </button>
+                    <button onclick="showPage('withdrawCashPage')" class="col-span-2 sm:col-span-1 btn-mpesa p-6 text-lg flex flex-col items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cash-stack mb-2" viewBox="0 0 16 16">
+                          <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm12 10H3a1 1 0 0 1-1-1V4h12v8a1 1 0 0 1-1 1"/>
+                          <path d="M15 5H1v8h14zM15 4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                        </svg>
+                        Withdraw Cash
+                    </button>
+                    <button onclick="showPage('buyAirtimePage')" class="col-span-2 sm:col-span-1 btn-mpesa p-6 text-lg flex flex-col items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-phone-fill mb-2" viewBox="0 0 16 16">
+                          <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0"/>
+                        </svg>
+                        Buy Airtime
+                    </button>
+                    <button onclick="checkBalance()" class="col-span-2 sm:col-span-1 btn-mpesa p-6 text-lg flex flex-col items-center justify-center">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-wallet2 mb-2" viewBox="0 0 16 16">
+                          <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9A1.5 1.5 0 0 1 1.5 3H2V1.78a1.5 1.5 0 0 1 1.404-1.454L4.136.11a1.5 1.5 0 0 1 .864.03L6 1l1.136-.86A1.5 1.5 0 0 1 8.272.11l1.136.89.864-.674zM14 4H2v10h12zM3 3V1.78a.5.5 0 0 0-.21-.424L1.864.932.932.356A.5.5 0 0 0 .5 0H.499a.5.5 0 0 0-.22.05L0 .5V3z"/>
+                        </svg>
+                        Check Balance
+                    </button>
+                </div>
+            </div>
+
+            <div id="sendMoneyPage" class="page">
+                <div class="card">
+                    <h2 class="text-2xl font-semibold mb-4 mpesa-green-text">Send Money</h2>
+                    <label for="sendRecipientPhone" class="block text-sm font-medium text-gray-700 mb-1">Recipient's Phone Number:</label>
+                    <input type="tel" id="sendRecipientPhone" class="input-field" placeholder="e.g., 0712345678">
+                    <label for="sendAmount" class="block text-sm font-medium text-gray-700 mb-1">Amount (KES):</label>
+                    <input type="number" id="sendAmount" class="input-field" placeholder="e.g., 500">
+                    <label for="sendPin" class="block text-sm font-medium text-gray-700 mb-1">M-PESA PIN:</label>
+                    <input type="password" id="sendPin" class="input-field" placeholder="Enter your PIN" maxlength="4">
+                    <div class="flex justify-between mt-6">
+                        <button onclick="showPage('homePage')" class="btn-secondary">Back</button>
+                        <button onclick="processSendMoney()" class="btn-mpesa">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="withdrawCashPage" class="page">
+                <div class="card">
+                    <h2 class="text-2xl font-semibold mb-4 mpesa-green-text">Withdraw Cash</h2>
+                    <label for="withdrawAgentNumber" class="block text-sm font-medium text-gray-700 mb-1">Agent Number:</label>
+                    <input type="text" id="withdrawAgentNumber" class="input-field" placeholder="e.g., 123456">
+                    <label for="withdrawAmount" class="block text-sm font-medium text-gray-700 mb-1">Amount (KES):</label>
+                    <input type="number" id="withdrawAmount" class="input-field" placeholder="e.g., 1000">
+                    <label for="withdrawPin" class="block text-sm font-medium text-gray-700 mb-1">M-PESA PIN:</label>
+                    <input type="password" id="withdrawPin" class="input-field" placeholder="Enter your PIN" maxlength="4">
+                    <div class="flex justify-between mt-6">
+                        <button onclick="showPage('homePage')" class="btn-secondary">Back</button>
+                        <button onclick="processWithdrawCash()" class="btn-mpesa">Withdraw</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="buyAirtimePage" class="page">
+                <div class="card">
+                    <h2 class="text-2xl font-semibold mb-4 mpesa-green-text">Buy Airtime</h2>
+                    <label for="airtimePhoneNumber" class="block text-sm font-medium text-gray-700 mb-1">Phone Number:</label>
+                    <input type="tel" id="airtimePhoneNumber" class="input-field" placeholder="For self or other">
+                    <label for="airtimeAmount" class="block text-sm font-medium text-gray-700 mb-1">Amount (KES):</label>
+                    <input type="number" id="airtimeAmount" class="input-field" placeholder="e.g., 100">
+                    <label for="airtimePin" class="block text-sm font-medium text-gray-700 mb-1">M-PESA PIN:</label>
+                    <input type="password" id="airtimePin" class="input-field" placeholder="Enter your PIN" maxlength="4">
+                    <div class="flex justify-between mt-6">
+                        <button onclick="showPage('homePage')" class="btn-secondary">Back</button>
+                        <button onclick="processBuyAirtime()" class="btn-mpesa">Buy</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="messageBox"></div>
+
+        <footer class="text-center mt-8 text-gray-500 text-sm">
+            <p>&copy; <span id="currentYear"></span> M-PESA Mockup. For demonstration purposes only.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Mock M-PESA balance
+        let currentBalance = 5000.75; // Initial mock balance
+
+        // Function to display a message
+        function showMessage(message, type = 'success') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'show'; // Add 'show' class to make it visible
+            if (type === 'error') {
+                messageBox.style.backgroundColor = '#EF4444'; // Red for error
+            } else {
+                messageBox.style.backgroundColor = '#333'; // Default dark for success/info
+            }
+
+            // Hide the message box after 3 seconds
+            setTimeout(() => {
+                messageBox.className = ''; // Remove 'show' class
+                 messageBox.style.opacity = '0'; // Ensure it's hidden
+                 messageBox.style.bottom = '20px';
+            }, 3000);
+        }
+
+        // Function to show a specific page and hide others
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                if (page.id === pageId) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            // Clear input fields on page change
+            clearInputFields(pageId);
+        }
+
+        // Function to clear input fields of a specific page or all if no pageId
+        function clearInputFields(pageId = null) {
+            const scope = pageId ? document.getElementById(pageId) : document;
+            if (scope) {
+                const inputs = scope.querySelectorAll('input[type="text"], input[type="tel"], input[type="number"], input[type="password"]');
+                inputs.forEach(input => input.value = '');
+            }
+        }
+
+        // --- Transaction Processing Functions (Mock) ---
+
+        // Process Send Money
+        function processSendMoney() {
+            const recipientPhone = document.getElementById('sendRecipientPhone').value;
+            const amount = document.getElementById('sendAmount').value;
+            const pin = document.getElementById('sendPin').value;
+
+            if (!recipientPhone || !amount || !pin) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+            if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+                showMessage('Please enter a valid amount.', 'error');
+                return;
+            }
+            if (pin.length !== 4 || isNaN(parseInt(pin))) {
+                 showMessage('PIN must be 4 digits.', 'error');
+                return;
+            }
+            const amountNum = parseFloat(amount);
+            if (amountNum > currentBalance) {
+                showMessage(`Insufficient balance. Your balance is KES ${currentBalance.toFixed(2)}.`, 'error');
+                return;
+            }
+
+            currentBalance -= amountNum;
+            // Simulate success
+            showMessage(`Successfully sent KES ${amount} to ${recipientPhone}. New balance: KES ${currentBalance.toFixed(2)}`);
+            showPage('homePage'); // Go back to home
+        }
+
+        // Process Withdraw Cash
+        function processWithdrawCash() {
+            const agentNumber = document.getElementById('withdrawAgentNumber').value;
+            const amount = document.getElementById('withdrawAmount').value;
+            const pin = document.getElementById('withdrawPin').value;
+
+
+            if (!agentNumber || !amount || !pin) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+             if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+                showMessage('Please enter a valid amount.', 'error');
+                return;
+            }
+            if (pin.length !== 4 || isNaN(parseInt(pin))) {
+                 showMessage('PIN must be 4 digits.', 'error');
+                return;
+            }
+
+            const amountNum = parseFloat(amount);
+            if (amountNum > currentBalance) {
+                showMessage(`Insufficient balance. Your balance is KES ${currentBalance.toFixed(2)}.`, 'error');
+                return;
+            }
+            currentBalance -= amountNum;
+            // Simulate success
+            showMessage(`Successfully withdrew KES ${amount} from Agent ${agentNumber}. New balance: KES ${currentBalance.toFixed(2)}`);
+            showPage('homePage');
+        }
+
+        // Process Buy Airtime
+        function processBuyAirtime() {
+            const phoneNumber = document.getElementById('airtimePhoneNumber').value;
+            const amount = document.getElementById('airtimeAmount').value;
+            const pin = document.getElementById('airtimePin').value;
+
+            if (!phoneNumber || !amount || !pin) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+            if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+                showMessage('Please enter a valid amount.', 'error');
+                return;
+            }
+             if (pin.length !== 4 || isNaN(parseInt(pin))) {
+                 showMessage('PIN must be 4 digits.', 'error');
+                return;
+            }
+            const amountNum = parseFloat(amount);
+            if (amountNum > currentBalance) {
+                showMessage(`Insufficient balance. Your balance is KES ${currentBalance.toFixed(2)}.`, 'error');
+                return;
+            }
+            currentBalance -= amountNum;
+            // Simulate success
+            showMessage(`Successfully bought KES ${amount} airtime for ${phoneNumber}. New balance: KES ${currentBalance.toFixed(2)}`);
+            showPage('homePage');
+        }
+
+        // Check Balance
+        function checkBalance() {
+            // In a real app, you'd ask for PIN here. For simplicity, we'll just show.
+            showMessage(`Your M-PESA balance is KES ${currentBalance.toFixed(2)}.`);
+            // No page change, message appears, then fades.
+        }
+
+        // Initialize: Show home page by default
+        window.onload = () => {
+            showPage('homePage');
+        };
+    </script>
+</body>
+</html>
