@@ -23,10 +23,9 @@ The mockup currently simulates the following M-PESA features:
 
 1.  **Clone the repository (optional):**
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/mpesa-mvp-mockup.git](https://github.com/YOUR_USERNAME/mpesa-mvp-mockup.git)
+    git clone [https://github.com/blacksnowmartin/mpesa-mvp-mockup.git](https://github.com/blacksnowmartin/mpesa-mvp-mockup.git)
     cd mpesa-mvp-mockup
     ```
-    (Replace `YOUR_USERNAME` with your GitHub username)
 
 2.  **Open the HTML file:**
     * Simply open the `mpesa_mockup.html` (or `index.html` if you renamed it) file in any modern web browser (like Chrome, Firefox, Safari, or Edge).
@@ -62,4 +61,4 @@ The mockup currently simulates the following M-PESA features:
 
 ## License
 
-This project is for demonstration purposes. You can specify a license if you wish (e.g., MIT License).
+This project is for demonstration purposes. 
