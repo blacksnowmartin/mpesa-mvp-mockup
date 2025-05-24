@@ -3,118 +3,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MPesa Toolkit Simulation</title>
+  <title>MPesa Toolkit</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f3f4f6;
-      padding: 2rem;
+      background-color: #f1f5f9;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      padding: 20px;
     }
 
-    .container {
-      background-color: white;
+    .mpesa-container {
+      background-color: #ffffff;
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 15px;
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease-in-out;
     }
 
-    h2 {
+    .mpesa-header {
       text-align: center;
-      color: #1c1c1c;
       margin-bottom: 1.5rem;
     }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
+    .mpesa-header h2 {
+      font-size: 1.75rem;
+      color: #1e293b;
     }
 
-    input {
-      width: 100%;
-      padding: 0.75rem;
+    .form-group {
       margin-bottom: 1.2rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
     }
 
-    button {
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      display: block;
+      color: #334155;
+    }
+
+    .form-group input {
       width: 100%;
-      padding: 0.75rem;
-      background-color: #28a745;
-      color: white;
-      border: none;
+      padding: 0.75rem 1rem;
       font-size: 1rem;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      transition: border 0.3s;
     }
 
-    button:hover {
-      background-color: #218838;
+    .form-group input:focus {
+      outline: none;
+      border-color: #16a34a;
+      background-color: #f0fdf4;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background-color: #16a34a;
+      color: white;
+      font-size: 1.05rem;
+      padding: 0.75rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #15803d;
     }
 
     .message {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       text-align: center;
-      font-weight: bold;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .message.success {
+      color: #15803d;
+    }
+
+    .message.error {
+      color: #dc2626;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>MPesa Toolkit</h2>
+
+  <div class="mpesa-container">
+    <div class="mpesa-header">
+      <h2>MPesa Toolkit</h2>
+      <p style="color:#64748b;">Simulate STK Push Transaction</p>
+    </div>
+
     <form id="mpesaForm">
-      <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" name="phone" placeholder="e.g. 254712345678" required />
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="e.g. 254712345678" required />
+      </div>
 
-      <label for="amount">Amount (KES)</label>
-      <input type="number" id="amount" name="amount" placeholder="e.g. 100" required />
+      <div class="form-group">
+        <label for="amount">Amount (KES)</label>
+        <input type="number" id="amount" placeholder="e.g. 500" required />
+      </div>
 
-      <button type="submit">Send STK Push</button>
+      <button type="submit" class="submit-btn">Send STK Push</button>
     </form>
-    <div class="message" id="message"></div>
+
+    <div id="message" class="message"></div>
   </div>
 
   <script>
-    document.getElementById('mpesaForm').addEventListener('submit', function(e) {
+    const form = document.getElementById('mpesaForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       const phone = document.getElementById('phone').value.trim();
-      const amount = document.getElementById('amount').value.trim();
-      const messageEl = document.getElementById('message');
+      const amount = parseFloat(document.getElementById('amount').value.trim());
 
-      // Simple validation
+      // Reset message
+      message.textContent = '';
+      message.className = 'message';
+
+      // Validation
       if (!phone.match(/^2547\d{8}$/)) {
-        messageEl.textContent = "Invalid phone number. Must start with 2547...";
-        messageEl.style.color = "red";
+        message.textContent = "Invalid phone number. Must start with 2547...";
+        message.classList.add("error");
         return;
       }
 
-      if (parseFloat(amount) <= 0) {
-        messageEl.textContent = "Amount must be greater than 0.";
-        messageEl.style.color = "red";
+      if (isNaN(amount) || amount <= 0) {
+        message.textContent = "Enter a valid amount greater than 0.";
+        message.classList.add("error");
         return;
       }
 
-      // Simulate STK push
-      messageEl.textContent = "Sending STK push...";
-      messageEl.style.color = "#333";
+      message.textContent = "Sending STK push...";
+      message.classList.remove("error");
+      message.classList.remove("success");
 
+      // Simulate delay
       setTimeout(() => {
-        messageEl.textContent = `STK push sent to ${phone} for KES ${amount}.`;
-        messageEl.style.color = "green";
-        document.getElementById('mpesaForm').reset();
+        message.textContent = `STK Push sent to ${phone} for KES ${amount.toFixed(2)}.`;
+        message.classList.add("success");
+        form.reset();
       }, 2000);
     });
   </script>
+
 </body>
 </html>
